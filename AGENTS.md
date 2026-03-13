@@ -20,7 +20,7 @@ Read [ARCHITECTURE.md](./ARCHITECTURE.md) before making structural changes.
 | Design decisions and format spec | [docs/DESIGN.md](./docs/DESIGN.md) |
 | Core beliefs / why this tool exists | [docs/design-docs/core-beliefs.md](./docs/design-docs/core-beliefs.md) |
 | How does a specific agent hook work? | [docs/references/agent-hooks.md](./docs/references/agent-hooks.md) |
-| Current execution plan | [docs/exec-plans/active/](./docs/exec-plans/active/) |
+| Execution plans (all phases complete) | [docs/PLANS.md](./docs/PLANS.md) |
 | Completed plans | [docs/exec-plans/completed/](./docs/exec-plans/completed/) |
 | Tech debt and known gaps | [docs/exec-plans/tech-debt-tracker.md](./docs/exec-plans/tech-debt-tracker.md) |
 | Quality grades by module | [docs/QUALITY_SCORE.md](./docs/QUALITY_SCORE.md) |

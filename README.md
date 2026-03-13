@@ -87,7 +87,7 @@ src/lib.rs
 ---
 {
   "schema_version": "authorship/3.0.0",
-  "tool_version": "ai-attr/0.1.0",
+  "tool_version": "ai-attr/0.2.0",
   "prompts": {
     "a1b2c3d4e5f6a7b8": {
       "agent_id": {
@@ -153,4 +153,4 @@ See [docs/PLANS.md](./docs/PLANS.md) for the full roadmap.
 
 ## License
 
-TBD
+[MIT](./LICENSE)

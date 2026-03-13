@@ -58,8 +58,8 @@ ai-attr blame src/main.rs --json
 Displays AI composition statistics.
 
 ```
-ai-attr stats                    # HEAD only
-ai-attr stats HEAD~10..HEAD      # range
+ai-attr stats                    # defaults to HEAD~10..HEAD
+ai-attr stats HEAD~5..HEAD       # custom range
 ai-attr stats --json             # JSON output
 ```
 
