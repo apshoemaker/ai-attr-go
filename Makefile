@@ -1,7 +1,8 @@
 .PHONY: build test vet clean install
 
 BINARY := ai-attr
-VERSION := 0.1.0
+VERSION := 0.2.0
+TEST := foo
 LDFLAGS := -ldflags "-X main.version=$(VERSION)"
 
 build:
