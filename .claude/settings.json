@@ -1,0 +1,37 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/apshoemaker/proj/me/ai-attr-go/ai-attr checkpoint claude --hook-input",
+            "type": "command"
+          }
+        ],
+        "matcher": "Write|Edit|MultiEdit|CreateFile"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/apshoemaker/proj/me/ai-attr-go/ai-attr checkpoint claude --hook-input",
+            "type": "command"
+          }
+        ],
+        "matcher": "Write|Edit|MultiEdit|CreateFile"
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "command": "/Users/apshoemaker/proj/me/ai-attr-go/ai-attr checkpoint claude --hook-input",
+            "type": "command"
+          }
+        ],
+        "matcher": ""
+      }
+    ]
+  }
+}
