@@ -1,0 +1,112 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        include:
+          - goos: linux
+            goarch: amd64
+            suffix: ""
+          - goos: linux
+            goarch: arm64
+            suffix: ""
+          - goos: darwin
+            goarch: amd64
+            suffix: ""
+          - goos: darwin
+            goarch: arm64
+            suffix: ""
+          - goos: windows
+            goarch: amd64
+            suffix: ".exe"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+
+      - name: Run tests
+        run: go test ./...
+
+      - name: Build binary
+        env:
+          GOOS: ${{ matrix.goos }}
+          GOARCH: ${{ matrix.goarch }}
+        run: |
+          VERSION="${GITHUB_REF_NAME#v}"
+          BINARY="ai-attr-${{ matrix.goos }}-${{ matrix.goarch }}${{ matrix.suffix }}"
+          go build -ldflags "-X main.version=${VERSION}" -o "${BINARY}" ./cmd/ai-attr
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ai-attr-${{ matrix.goos }}-${{ matrix.goarch }}
+          path: ai-attr-*
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Generate checksums
+        working-directory: artifacts
+        run: sha256sum ai-attr-* > checksums.txt
+
+      - name: Generate release notes
+        run: |
+          VERSION="${GITHUB_REF_NAME}"
+          PREV_TAG=$(git tag --sort=-v:refname | grep -v "^${VERSION}$" | head -1)
+          {
+            echo "## What's Changed"
+            echo ""
+            if [ -n "${PREV_TAG}" ]; then
+              git log "${PREV_TAG}..${VERSION}" --pretty=format:"- %s" --no-merges
+            else
+              git log "${VERSION}" --pretty=format:"- %s" --no-merges
+            fi
+            echo ""
+            echo ""
+            echo "## Binaries"
+            echo ""
+            echo "| Platform | Architecture | Binary |"
+            echo "|----------|-------------|--------|"
+            echo "| Linux | amd64 | \`ai-attr-linux-amd64\` |"
+            echo "| Linux | arm64 | \`ai-attr-linux-arm64\` |"
+            echo "| macOS | amd64 (Intel) | \`ai-attr-darwin-amd64\` |"
+            echo "| macOS | arm64 (Apple Silicon) | \`ai-attr-darwin-arm64\` |"
+            echo "| Windows | amd64 | \`ai-attr-windows-amd64.exe\` |"
+            echo ""
+            echo "## Checksums"
+            echo ""
+            echo '```'
+            cat artifacts/checksums.txt
+            echo '```'
+          } > release-notes.md
+
+      - name: Create release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release create "${GITHUB_REF_NAME}" \
+            --title "ai-attr ${GITHUB_REF_NAME}" \
+            --notes-file release-notes.md \
+            artifacts/ai-attr-* \
+            artifacts/checksums.txt
