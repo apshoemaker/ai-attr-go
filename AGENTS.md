@@ -36,3 +36,10 @@ go test ./pkg/storage/...      # git integration tests
 ```
 
 Git notes tests create real repos via `t.TempDir()`. No network access required.
+
+## Cursor Cloud specific instructions
+
+- **Go version**: Requires Go 1.23+. The update script installs Go 1.23.9 to `/usr/local/go`. Ensure `PATH` includes `/usr/local/go/bin`.
+- **Running tests**: `go test ./...` — takes ~30s due to `pkg/storage` and `pkg/cli` creating real git repos. No network or external services needed.
+- **Building**: `go build -o ai-attr ./cmd/ai-attr` or `make build`.
+- **Lint**: `go vet ./...` (no additional linter configured).
